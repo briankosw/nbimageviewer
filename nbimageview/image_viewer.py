@@ -16,18 +16,7 @@ class ImageViewer(ABC):
     def __init__(self, images, labels=None):
         self._images = images
         self._labels = labels
-
         self._init_script()
-        self._display = display.display(
-            display.Javascript("void(0);"),
-            display_id=True
-        )
-        #self._display = display.display(
-        #        display.Javascript("void(0);"),
-        #        display_id=True
-        #)
-
-        print("ImageViewer")
 
     @abstractmethod
     def display(self):
@@ -61,10 +50,17 @@ class ImageViewer(ABC):
         script_str = ""
         asset_files = os.listdir(ASSETS_DIR)
         for asset_file in asset_files:
-            with open(ASSETS_DIR + asset_file, 'r') as f:
-                script_str = ''.join([
-                    script_str,
-                    "<script>{}</script>".format(f.read())
-                ])
+            if ".js" in asset_file:
+                with open(ASSETS_DIR + asset_file, 'r') as f:
+                    script_str = ''.join([
+                        script_str,
+                        "<script>{}</script>".format(f.read())
+                    ])
+            elif ".css" in asset_file:
+                with open(ASSETS_DIR + asset_file, 'r') as f:
+                    script_str = ''.join([
+                        script_str,
+                        "<style>{}</style>".format(f.read())
+                    ])
 
         display.display(display.HTML(script_str))
