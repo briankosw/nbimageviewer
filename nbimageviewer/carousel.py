@@ -4,8 +4,8 @@ from . import image_viewer
 
 
 class Carousel(image_viewer.ImageViewer):
-    def __init__(self, images, labels=None):
-        super().__init__(images, labels)
-
+    """
+        Carousel displays a carousel of the provided images.
+    """
     def display(self):
-        print("Displaying carousel")
+        pass

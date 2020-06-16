@@ -1,1 +1,1 @@
-# nbimageview
+# nbimageviewer
