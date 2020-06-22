@@ -5,6 +5,8 @@ import numpy as np
 import PIL
 import IPython.display as display
 
+from .server import Application
+
 ASSETS_DIR = os.path.dirname(os.path.realpath(__file__)) + "/assets/"
 
 
@@ -14,10 +16,14 @@ class ImageViewer(ABC):
         viewing options.
     """
 
-    def __init__(self, images, labels=None):
+    def __init__(self, images, labels=None, port=8889):
         self._images = images
         self._labels = labels
+        # create a div with id 'root' for script target
+        display.display(display.HTML("<div id='root'></div>"))
         initialize_scripts()
+        app = Application()
+        app.listen(port)
         self.display()
 
     @abstractmethod
