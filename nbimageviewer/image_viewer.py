@@ -21,9 +21,11 @@ class ImageViewer(ABC):
         self._labels = labels
         # create a div with id 'root' for script target
         display.display(display.HTML("<div id='root'></div>"))
+        # add port to window
+        display.display(display.Javascript("window.port = " + str(port)))
+        self.app = Application()
+        self.app.listen(port)
         initialize_scripts()
-        app = Application()
-        app.listen(port)
         self.display()
 
     @abstractmethod

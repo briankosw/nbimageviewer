@@ -1,8 +1,12 @@
 import logging
+import json
 import nest_asyncio
 import tornado.web as web
 import tornado.websocket as ws
 import tornado.escape
+import tornado.ioloop
+
+logging.getLogger().setLevel(logging.DEBUG)
 
 
 class Application(web.Application):
@@ -24,15 +28,17 @@ class SocketHandler(ws.WebSocketHandler):
             logging.error("Error sending data", exc_info=True)
 
     def on_message(self, message):
-        message = tornado.escape.json_decode(message)["body"]
-        if message == "py_client":
-            py_client = self
-            logging.info("Python client connected.")
-        elif message == "js_client":
-            js_client = self
-            logging.info("JavaScript client connected.")
-        elif message == "data":
-            SocketHandler.send_data(message["data"])
+        try:
+            json_msg = tornado.escape.json_decode(message)
+            logging.info(json_msg)
+            SocketHandler.send_data(json_msg)
+        except json.JSONDecodeError:
+            if message == "py_client":
+                SocketHandler.py_client = self
+                logging.info("Python client connected.")
+            elif message == "js_client":
+                SocketHandler.js_client = self
+                logging.info("JavaScript client connected.")
 
     def on_close(self):
         if self == SocketHandler.py_client:
@@ -42,3 +48,9 @@ class SocketHandler(ws.WebSocketHandler):
 
     def check_origin(self, origin):
         return "localhost" in origin
+
+
+if __name__ == "__main__":
+    app = Application()
+    app.listen(8889)
+    tornado.ioloop.IOLoop.current().start()
