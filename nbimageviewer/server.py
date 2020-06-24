@@ -30,7 +30,6 @@ class SocketHandler(ws.WebSocketHandler):
     def on_message(self, message):
         try:
             json_msg = tornado.escape.json_decode(message)
-            logging.info(json_msg)
             SocketHandler.send_data(json_msg)
         except json.JSONDecodeError:
             if message == "py_client":

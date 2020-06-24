@@ -1,11 +1,13 @@
 import os
 from abc import ABC, abstractmethod
+import asyncio
 
 import numpy as np
 import PIL
 import IPython.display as display
 
 from .server import Application
+from .client import Client
 
 ASSETS_DIR = os.path.dirname(os.path.realpath(__file__)) + "/assets/"
 
@@ -13,23 +15,25 @@ ASSETS_DIR = os.path.dirname(os.path.realpath(__file__)) + "/assets/"
 class ImageViewer(ABC):
     """
         ImageViewer is an Abstract Base Class for different types of image
-        viewing options.
+        viewing options. Since there are different pipelines and optimizations
+        for different types of image viewing layouts, ImageViewer serves as a
+        starting point that initializes and launches all the necessarily
+        components that are shared amongst all the different layouts.
     """
 
     def __init__(self, images, labels=None, port=8889):
-        self._images = images
-        self._labels = labels
-        # create a div with id 'root' for script target
-        display.display(display.HTML("<div id='root'></div>"))
-        # add port to window
-        display.display(display.Javascript("window.port = " + str(port)))
+        # start application
         self.app = Application()
         self.app.listen(port)
+        # add port to window
+        display.display(display.Javascript("window.port = " + str(port)))
         initialize_scripts()
-        self.display()
+        # create client
+        self.client = Client("ws://localhost:" + str(port), images, labels)
+        # asyncio.create_task(self.display())
 
     @abstractmethod
-    def display(self):
+    async def display(self):
         """ Abstract method that displays the provided images.
         """
 
@@ -53,7 +57,7 @@ class ImageViewer(ABC):
                     len(images), len(labels)
                 )
             )
-        self._labels = labels  # random code to remove pylint warning
+        self._labels = labels  # FIX: random code to remove pylint warning
 
 
 def initialize_scripts():
