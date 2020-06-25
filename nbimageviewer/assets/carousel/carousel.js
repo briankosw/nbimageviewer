@@ -7,7 +7,6 @@ ws.addEventListener("open", () => {
 
 ws.addEventListener("message", (payload) => {
     const data = JSON.parse(payload.data)["data"];
-    console.log(data);
     for (const [i, img] of Object.entries(data)) {
         const item = document.createElement("div");
         item.className = "carousel-item";

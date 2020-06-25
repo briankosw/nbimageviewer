@@ -9,7 +9,6 @@ import tornado.websocket as ws
 class Client:
     def __init__(self, url, images, labels):
         self.ws = asyncio.create_task(self.websocket_connect())
-        print(self.ws)
         self.url = url
         self._images = images
         self._labels = labels

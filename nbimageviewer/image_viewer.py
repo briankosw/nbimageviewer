@@ -64,15 +64,17 @@ def initialize_scripts():
     """ Initializes the scripts inside the assets directory.
     """
     script_str = ""
-    asset_files = os.listdir(ASSETS_DIR)
-    for asset_file in asset_files:
-        if ".js" in asset_file:
-            with open(ASSETS_DIR + asset_file, "r") as f:
-                script_str = "".join(
-                    [script_str, "<script>{}</script>".format(f.read())]
-                )
-        elif ".css" in asset_file:
-            with open(ASSETS_DIR + asset_file, "r") as f:
-                script_str = "".join([script_str, "<style>{}</style>".format(f.read())])
+    asset_dirs = os.listdir(ASSETS_DIR)
+    for asset_dir in asset_dirs:
+        asset_files = os.listdir(os.path.join(ASSETS_DIR, asset_dir))
+        for asset_file in asset_files:
+            if ".js" in asset_file:
+                with open(os.path.join(ASSETS_DIR, asset_dir, asset_file), "r") as f:
+                    script_str = "".join(
+                        [script_str, "<script>{}</script>".format(f.read())]
+                    )
+            elif ".css" in asset_file:
+                with open(os.path.join(ASSETS_DIR, asset_dir, asset_file), "r") as f:
+                    script_str = "".join([script_str, "<style>{}</style>".format(f.read())])
 
     display.display(display.HTML(script_str))

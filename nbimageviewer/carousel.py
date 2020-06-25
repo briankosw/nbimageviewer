@@ -14,7 +14,7 @@ class Carousel(image_viewer.ImageViewer):
     """
     def __init__(self, images, labels=None, port=8889):
         super(Carousel, self).__init__(images, labels, port)
-        display.display(display.HTML(ASSETS_DIR + "carousel.html"))
+        display.display(display.HTML(ASSETS_DIR + "carousel/carousel.html"))
         asyncio.create_task(self.display())
 
     async def display(self):

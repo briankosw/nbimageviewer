@@ -6,8 +6,6 @@ import tornado.websocket as ws
 import tornado.escape
 import tornado.ioloop
 
-logging.getLogger().setLevel(logging.DEBUG)
-
 
 class Application(web.Application):
     def __init__(self):
