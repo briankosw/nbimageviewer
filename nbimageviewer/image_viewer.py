@@ -9,8 +9,6 @@ import IPython.display as display
 from .server import Application
 from .client import Client
 
-ASSETS_DIR = os.path.dirname(os.path.realpath(__file__)) + "/assets/"
-
 
 class ImageViewer(ABC):
     """
@@ -27,10 +25,8 @@ class ImageViewer(ABC):
         self.app.listen(port)
         # add port to window
         display.display(display.Javascript("window.port = " + str(port)))
-        initialize_scripts()
         # create client
         self.client = Client("ws://localhost:" + str(port), images, labels)
-        # asyncio.create_task(self.display())
 
     @abstractmethod
     async def display(self):
@@ -59,22 +55,7 @@ class ImageViewer(ABC):
             )
         self._labels = labels  # FIX: random code to remove pylint warning
 
-
-def initialize_scripts():
-    """ Initializes the scripts inside the assets directory.
-    """
-    script_str = ""
-    asset_dirs = os.listdir(ASSETS_DIR)
-    for asset_dir in asset_dirs:
-        asset_files = os.listdir(os.path.join(ASSETS_DIR, asset_dir))
-        for asset_file in asset_files:
-            if ".js" in asset_file:
-                with open(os.path.join(ASSETS_DIR, asset_dir, asset_file), "r") as f:
-                    script_str = "".join(
-                        [script_str, "<script>{}</script>".format(f.read())]
-                    )
-            elif ".css" in asset_file:
-                with open(os.path.join(ASSETS_DIR, asset_dir, asset_file), "r") as f:
-                    script_str = "".join([script_str, "<style>{}</style>".format(f.read())])
-
-    display.display(display.HTML(script_str))
+    @abstractmethod
+    def import_assets(self):
+        """ Imports relevants assets
+        """

@@ -3,8 +3,9 @@ from setuptools import setup, find_packages
 setup(
     name="nbimageviewer",
     version="0.1",
-    url="https://github.com/briankosw/nbimageviewer",
+    description="nbimageviewer is a Python library for rapid and efficient image visualization for Jupyter Notebooks.",
     author="Brian Ko",
     author_email="briankosw@gmail.com",
-    packages=find_packages()
+    url="https://github.com/briankosw/nbimageviewer",
+    packages=find_packages(),
 )
