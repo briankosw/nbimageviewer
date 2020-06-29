@@ -1,19 +1,20 @@
 div.carousel {
     max-width: 100%;
-    resize: both;
+    resize: vertical;
     overflow: auto;
-    height: 400px;
+    height: 500px;
     border: 1px solid;
 }
 
 div#primary {
     height: 80%;
-    background-color: red;
+    /*background-color: red;*/
 }
 
 div#secondary {
-    height: 20%;
-    background-color: blue;
+    min-height: 100px;
+    max-height: 100px;
+    /*background-color: blue;*/
 }
 
 .splide__track {
@@ -29,7 +30,15 @@ ul.splide__list {
     width: 100%;
 }
 
-li.splide__slide > img {
-    display: block !important;
+div#secondary li.splide__slide {
+    margin: auto;
+}
+
+div#primary li.splide__slide > img {
+    position: absolute; 
+    top: 0; 
+    bottom: 0; 
+    left: 0; 
+    right: 0;
     margin: auto !important;
 }

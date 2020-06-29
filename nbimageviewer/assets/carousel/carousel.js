@@ -10,9 +10,13 @@ ws.addEventListener("open", () => {
     var secondary = new Splide("#secondary", {
         pagination: false,
         gap: 5,
-        cover: true,
         fixedWidth: 100,
-        isNavigation: true
+        fixedHeight: 100,
+        cover: true,
+        isNavigation: true,
+        focus: "center",
+        arrows: false,
+        speed: 200
     }).mount();
     primary.sync(secondary).mount();
 });
