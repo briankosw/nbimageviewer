@@ -1,6 +1,5 @@
-import os
 from abc import ABC, abstractmethod
-import asyncio
+from uuid import uuid4
 
 import numpy as np
 import PIL
@@ -20,17 +19,26 @@ class ImageViewer(ABC):
     """
 
     def __init__(self, images, labels=None, port=8889):
+        self.id = uuid4().hex
+        self.addr = "ws://localhost:" + str(port) + "/" + self.id
         # start application
-        self.app = Application()
+        self.app = Application(port=port, path=self.id)
         self.app.listen(port)
-        # add port to window
-        display.display(display.Javascript("window.port = " + str(port)))
+        # add addr to window
+        display.display(
+            display.Javascript("window.addr = \"{}\"".format(self.addr))
+        )
         # create client
-        self.client = Client("ws://localhost:" + str(port), images, labels)
+        self.client = Client(self.addr, images, labels)
 
     @abstractmethod
     async def display(self):
         """ Abstract method that displays the provided images.
+        """
+
+    @abstractmethod
+    def import_assets(self):
+        """ Imports relevant assets
         """
 
     def _validate_args(self, images, labels):
@@ -54,8 +62,3 @@ class ImageViewer(ABC):
                 )
             )
         self._labels = labels  # FIX: random code to remove pylint warning
-
-    @abstractmethod
-    def import_assets(self):
-        """ Imports relevants assets
-        """

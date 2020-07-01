@@ -6,14 +6,20 @@ import tornado.websocket as ws
 import tornado.escape
 import tornado.ioloop
 
+logging.getLogger().setLevel(logging.DEBUG)
+
 
 class Application(web.Application):
-    def __init__(self):
-        handlers = [(r"/", SocketHandler)]
+    def __init__(self, port=None, path=None):
+        if port is None or path is None:
+            raise ValueError("port and id value cannot be None.")
+        handlers = [(r"/" + path, SocketHandler, {"port": port, "path": path})]
         super(Application, self).__init__(handlers)
 
 
 class SocketHandler(ws.WebSocketHandler):
+    """Handler for socket connections.
+    """
     py_client = None
     js_client = None
 
@@ -24,6 +30,10 @@ class SocketHandler(ws.WebSocketHandler):
             cls.js_client.write_message(data)
         except Exception as e:
             logging.error("Error sending data", exc_info=True)
+
+    def initialize(self, port, path):
+        self._port = port
+        self._path = path
 
     def on_message(self, message):
         try:

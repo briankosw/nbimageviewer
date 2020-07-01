@@ -5,7 +5,7 @@ import IPython.display as display
 
 from . import image_viewer
 
-CAROUSEL_DIR = os.path.dirname(os.path.realpath(__file__)) + "/assets/carousel"
+CAROUSEL_DIR = os.path.dirname(os.path.realpath(__file__)) + "/assets/dist/"
 
 
 class Carousel(image_viewer.ImageViewer):
@@ -15,8 +15,8 @@ class Carousel(image_viewer.ImageViewer):
 
     def __init__(self, images, labels=None, port=8889):
         super(Carousel, self).__init__(images, labels, port)
-        self.import_assets()
         display.display(display.HTML(CAROUSEL_DIR + "/carousel.html"))
+        self.import_assets()
         asyncio.create_task(self.display())
 
     async def display(self):
@@ -26,16 +26,20 @@ class Carousel(image_viewer.ImageViewer):
 
     def import_assets(self):
         assets_str = ""
-        asset_files = os.listdir(CAROUSEL_DIR)
-        for asset_file in asset_files:
-            if ".js" in asset_file:
-                with open(os.path.join(CAROUSEL_DIR, asset_file), "r") as f:
-                    assets_str = "".join(
-                        [assets_str, "<script>{}</script>".format(f.read())]
-                    )
-            elif ".css" in asset_file:
-                with open(os.path.join(CAROUSEL_DIR, asset_file), "r") as f:
-                    assets_str = "".join(
-                        [assets_str, "<style>{}</style>".format(f.read())]
-                    )
+        # asset_files = os.listdir(CAROUSEL_DIR)
+        # for asset_file in asset_files:
+        #     if ".js" in asset_file:
+        #         with open(os.path.join(CAROUSEL_DIR, asset_file), "r") as f:
+        #             assets_str = "".join(
+        #                 [assets_str, "<script>{}</script>".format(f.read())]
+        #             )
+        #     elif ".css" in asset_file:
+        #         with open(os.path.join(CAROUSEL_DIR, asset_file), "r") as f:
+        #             assets_str = "".join(
+        #                 [assets_str, "<style>{}</style>".format(f.read())]
+        #             )
+        with open(os.path.join(CAROUSEL_DIR, "carousel.js"), "r") as f:
+            assets_str = "".join(
+                [assets_str, "<script>{}</script>".format(f.read())]
+            )
         display.display(display.HTML(assets_str))

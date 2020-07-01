@@ -7,14 +7,14 @@ import tornado.websocket as ws
 
 
 class Client:
-    def __init__(self, url, images, labels):
-        self.ws = asyncio.create_task(self.websocket_connect())
-        self.url = url
+    def __init__(self, addr, images, labels):
+        self._addr = addr
         self._images = images
         self._labels = labels
+        self.ws = asyncio.create_task(self.websocket_connect())
 
     async def websocket_connect(self):
-        self.ws = await ws.websocket_connect(self.url)
+        self.ws = await ws.websocket_connect(self._addr)
 
     async def send_data(self):
         images_bytes = list(map(Client.image2bytes, self._images))
