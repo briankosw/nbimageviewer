@@ -3,7 +3,7 @@ div.carousel {
     resize: vertical;
     overflow: auto;
     height: 500px;
-    border: 1px solid;
+    /*border: 1px solid;*/
 }
 
 div#primary {
@@ -14,7 +14,9 @@ div#primary {
 div#secondary {
     min-height: 100px;
     max-height: 100px;
-    /*background-color: blue;*/
+    background-color: #f7f7f7;
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
 }
 
 .splide__track {
