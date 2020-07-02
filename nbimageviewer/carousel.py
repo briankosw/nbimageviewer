@@ -15,7 +15,6 @@ class Carousel(image_viewer.ImageViewer):
 
     def __init__(self, images, labels=None, port=8889):
         super(Carousel, self).__init__(images, labels, port)
-        display.display(display.HTML(CAROUSEL_DIR + "/carousel.html"))
         self.import_assets()
         asyncio.create_task(self.display())
 
@@ -38,6 +37,10 @@ class Carousel(image_viewer.ImageViewer):
         #             assets_str = "".join(
         #                 [assets_str, "<style>{}</style>".format(f.read())]
         #             )
+        with open(os.path.join(CAROUSEL_DIR, "index.html"), "r") as f:
+            assets_str = "".join(
+                [assets_str, f.read().format(self.id)]
+            )
         with open(os.path.join(CAROUSEL_DIR, "carousel.js"), "r") as f:
             assets_str = "".join(
                 [assets_str, "<script>{}</script>".format(f.read())]

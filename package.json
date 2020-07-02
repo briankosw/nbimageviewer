@@ -7,7 +7,7 @@
     "start": "webpack-dev-server --mode development",
     "build": "webpack --mode production",
     "dev": "webpack --mode development",
-    "format": "prettier --write \"nbimageviewer/assets/**/*.{js,jsx}\"",
+    "format": "prettier --write \"nbimageviewer/assets/**/*.jsx\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

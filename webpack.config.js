@@ -1,5 +1,5 @@
 const path = require("path");
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+// const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const components_path = "./nbimageviewer/assets/src/components/";
 
 module.exports = {
@@ -9,7 +9,7 @@ module.exports = {
         gallery: components_path + "Gallery/Gallery.jsx",
     },
     plugins: [
-        new CleanWebpackPlugin(),
+        // new CleanWebpackPlugin(),
     ],
     output: {
         filename: "[name].js",

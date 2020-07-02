@@ -8,6 +8,7 @@ class Carousel extends Component {
     super(props);
     this.state = {
       value: 0,
+      slidesPerPage: 1,
     };
     this.socket = new WebSocket(window.addr);
   }
@@ -17,14 +18,15 @@ class Carousel extends Component {
       this.socket.send('js_client');
     });
     this.socket.addEventListener('message', (payload) => {
-      console.log(payload);
+      const data = JSON.parse(payload.data)['message'];
+      this.setState(data);
     });
   }
 
   render() {
     return (
-      <_Carousel arrows dots>
-        <img src="https://picsum.photos/200?random=1" />
+      <_Carousel arrows dots slidesPerPage={this.state.slidesPerPage}>
+        <img src="https://picsum.photos/300?random=1" />
         <img src="https://picsum.photos/200?random=2" />
         <img src="https://picsum.photos/200?random=3" />
         <img src="https://picsum.photos/200?random=4" />
@@ -34,4 +36,4 @@ class Carousel extends Component {
   }
 }
 
-ReactDOM.render(<Carousel/>, document.getElementById("root"));
+ReactDOM.render(<Carousel />, document.getElementById(window.id));

@@ -28,6 +28,10 @@ class ImageViewer(ABC):
         display.display(
             display.Javascript("window.addr = \"{}\"".format(self.addr))
         )
+        # add id to window
+        display.display(
+            display.Javascript("window.id = \"{}\"".format(self.id))
+        )
         # create client
         self.client = Client(self.addr, images, labels)
 
