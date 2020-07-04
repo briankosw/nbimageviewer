@@ -9,8 +9,11 @@ class Carousel extends Component {
     super(props);
     this.state = {
       value: 0,
+      slides: [],
       slidesPerPage: 1,
+      slidesPerScroll: 1,
     };
+    this.onChange = this.onChange.bind(this);
     this.socket = new WebSocket(window.addr);
     this.socket.addEventListener('open', () => {
       this.socket.send(JSON.stringify({ js_client: null }));
@@ -20,24 +23,31 @@ class Carousel extends Component {
       const msg_key = Object.keys(message)[0];
       if (msg_key === 'attrs') {
         this.setState(message[msg_key]);
+      } else if (msg_key === 'data') {
+        const images = Object.values(message[msg_key]).map((image) => {
+          const image_str = 'data:image/jpeg;base64,' + image;
+          return <img src={image_str} />;
+        });
+        this.setState({ slides: images });
       }
     });
+  }
+
+  onChange(value) {
+    this.setState({ value });
+    // I think communicate the state back to Python for lazy-loading.
   }
 
   render() {
     return (
       <_Carousel
-        arrows
-        dots
+        value={this.state.value}
+        slides={this.state.slides}
+        onChange={this.onChange}
         slidesPerPage={this.state.slidesPerPage}
         slidesPerScroll={this.state.slidesPerScroll}
-      >
-        <img src="https://picsum.photos/300?random=1" />
-        <img src="https://picsum.photos/200?random=2" />
-        <img src="https://picsum.photos/200?random=3" />
-        <img src="https://picsum.photos/200?random=4" />
-        <img src="https://picsum.photos/200?random=5" />
-      </_Carousel>
+        arrows
+      ></_Carousel>
     );
   }
 }

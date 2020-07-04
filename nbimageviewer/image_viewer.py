@@ -9,7 +9,7 @@ import IPython.display as display
 from .server import Application
 from .client import Client
 
-# logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.DEBUG)
 
 
 class ImageViewer(ABC):
