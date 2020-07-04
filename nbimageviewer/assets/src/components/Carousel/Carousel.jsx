@@ -16,8 +16,11 @@ class Carousel extends Component {
       this.socket.send(JSON.stringify({ js_client: null }));
     });
     this.socket.addEventListener('message', (payload) => {
-      const data = JSON.parse(payload.data);
-      this.setState(data);
+      const message = JSON.parse(payload.data);
+      const msg_key = Object.keys(message)[0];
+      if (msg_key === 'attrs') {
+        this.setState(message[msg_key]);
+      }
     });
   }
 

@@ -20,15 +20,27 @@ class SocketHandler(ws.WebSocketHandler):
     """
     py_client = None
     js_client = None
-    view_args = {}
 
     @classmethod
     def send_data(cls, data):
+        """ Send data to JavaScript client.
+        """
         logging.info("Sending data to js client")
         try:
             cls.js_client.write_message(data)
         except Exception as e:
             logging.error("Error sending data", exc_info=True)
+
+    @classmethod
+    def signal_py(cls):
+        """ Signals to Python client that JavaScript client has
+            succesfully connected.
+        """
+        logging.info("Signaling py_client")
+        try:
+            cls.py_client.write_message("js_client connected.")
+        except Exception as e:
+            logging.error("Error signaling py_client", exc_info=True)
 
     def initialize(self, port, path):
         self._port = port
@@ -40,18 +52,16 @@ class SocketHandler(ws.WebSocketHandler):
         if msg_key == "py_client":
             SocketHandler.py_client = self
             logging.info("Python client connected.")
-            SocketHandler.view_args = json_msg[msg_key]
         elif msg_key == "js_client":
             SocketHandler.js_client = self
             logging.info("JavaScript client connected.")
-            if SocketHandler.view_args is not None:
-                SocketHandler.send_data(json.dumps(SocketHandler.view_args))
-                SocketHandler.view_args = None
-        else:
-            if SocketHandler.js_client is None:
-                SocketHandler.view_args[msg_key] = json_msg[msg_key]
-            else:
-                SocketHandler.send_data(json_msg)
+            SocketHandler.signal_py()
+        elif msg_key == "attrs":
+            logging.info("Attributes received. Sending to js_client.")
+            SocketHandler.send_data(json_msg)
+        elif msg_key == "data":
+            logging.info("Data received. Sending to js_client.")
+            SocketHandler.send_data(json_msg)
 
     def on_close(self):
         if self == SocketHandler.py_client:

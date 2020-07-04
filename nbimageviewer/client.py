@@ -28,11 +28,19 @@ class Client:
                 await asyncio.sleep(0.0001)
 
     async def websocket_connect(self, view_args):
-        """ Connects to the websocket at given address.
+        """ Connects to the websocket at given address. Sends attributes and
+            data following a signal to the client.
         """
         self.ws = await ws.websocket_connect(self._addr)
-        message = {"py_client": view_args}
+        message = {"py_client": None}
         await self.write_message(message)
+        while True:
+            message = await self.ws.read_message()
+            if message:
+                await self.write_message({"attrs": view_args})
+                await self.send_data()
+                break
+            await asyncio.sleep(0.0001)
 
     async def write_message(self, message):
         """ Writes message to the websocket.
@@ -51,10 +59,10 @@ class Client:
         data_dict = {"data": {}}
         for i, image in enumerate(images_bytes):
             data_dict["data"][i] = image
-        await self.ws.write_message(json.dumps(data_dict))
+        await self.write_message(data_dict)
 
     @staticmethod
-    def image2bytes(image, quality=100):
+    def image2bytes(image, quality=80):
         """ Converts PIL Image to bytearray.
         """
         bytesIO = io.BytesIO()

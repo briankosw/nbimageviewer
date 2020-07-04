@@ -60,7 +60,7 @@ class Carousel(image_viewer.ImageViewer):
     def num_slides(self, num_slides):
         self._num_slides = num_slides
         asyncio.create_task(self.client.write_message(
-            {"slidesPerPage": num_slides}
+            {"attrs": {"slidesPerPage": num_slides}}
         ))
 
     @property
@@ -71,5 +71,5 @@ class Carousel(image_viewer.ImageViewer):
     def num_scrolls(self, num_scrolls):
         self._num_scrolls = num_scrolls
         asyncio.create_task(self.client.write_message(
-            {"slidesPerScroll": num_scrolls}
+            {"attrs": {"slidesPerScroll": num_scrolls}}
         ))
