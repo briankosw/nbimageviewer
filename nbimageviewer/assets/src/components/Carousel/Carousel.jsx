@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import _Carousel from '@brainhubeu/react-carousel';
 import '@brainhubeu/react-carousel/lib/style.css';
+import './Carousel.css';
 
 class Carousel extends Component {
   constructor(props) {
@@ -11,9 +12,6 @@ class Carousel extends Component {
       slidesPerPage: 1,
     };
     this.socket = new WebSocket(window.addr);
-  }
-
-  componentDidMount() {
     this.socket.addEventListener('open', () => {
       this.socket.send(JSON.stringify({ js_client: null }));
     });

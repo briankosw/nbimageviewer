@@ -20,7 +20,7 @@ class SocketHandler(ws.WebSocketHandler):
     """
     py_client = None
     js_client = None
-    view_args = None
+    view_args = {}
 
     @classmethod
     def send_data(cls, data):
@@ -48,7 +48,10 @@ class SocketHandler(ws.WebSocketHandler):
                 SocketHandler.send_data(json.dumps(SocketHandler.view_args))
                 SocketHandler.view_args = None
         else:
-            SocketHandler.send_data(json_msg)
+            if SocketHandler.js_client is None:
+                SocketHandler.view_args[msg_key] = json_msg[msg_key]
+            else:
+                SocketHandler.send_data(json_msg)
 
     def on_close(self):
         if self == SocketHandler.py_client:

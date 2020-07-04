@@ -30,7 +30,11 @@ class Carousel(image_viewer.ImageViewer):
             num_scrolls: number by which value will change on scroll
         """
         super(Carousel, self).__init__(
-            images, labels, port, slidesPerPage=num_slides, slidesPerScroll=num_scrolls
+            images,
+            labels,
+            port,
+            slidesPerPage=num_slides,
+            slidesPerScroll=num_scrolls
         )
         self.import_assets()
         self._num_slides = num_slides
@@ -56,7 +60,7 @@ class Carousel(image_viewer.ImageViewer):
     def num_slides(self, num_slides):
         self._num_slides = num_slides
         asyncio.create_task(self.client.write_message(
-            json.dumps({"slidesPerPage": num_slides})
+            {"slidesPerPage": num_slides}
         ))
 
     @property
@@ -67,5 +71,5 @@ class Carousel(image_viewer.ImageViewer):
     def num_scrolls(self, num_scrolls):
         self._num_scrolls = num_scrolls
         asyncio.create_task(self.client.write_message(
-            json.dumps({"slidesPerScroll": num_scrolls})
+            {"slidesPerScroll": num_scrolls}
         ))
