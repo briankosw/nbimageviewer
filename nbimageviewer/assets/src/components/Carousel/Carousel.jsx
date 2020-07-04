@@ -15,17 +15,22 @@ class Carousel extends Component {
 
   componentDidMount() {
     this.socket.addEventListener('open', () => {
-      this.socket.send('js_client');
+      this.socket.send(JSON.stringify({ js_client: null }));
     });
     this.socket.addEventListener('message', (payload) => {
-      const data = JSON.parse(payload.data)['message'];
+      const data = JSON.parse(payload.data);
       this.setState(data);
     });
   }
 
   render() {
     return (
-      <_Carousel arrows dots slidesPerPage={this.state.slidesPerPage}>
+      <_Carousel
+        arrows
+        dots
+        slidesPerPage={this.state.slidesPerPage}
+        slidesPerScroll={this.state.slidesPerScroll}
+      >
         <img src="https://picsum.photos/300?random=1" />
         <img src="https://picsum.photos/200?random=2" />
         <img src="https://picsum.photos/200?random=3" />

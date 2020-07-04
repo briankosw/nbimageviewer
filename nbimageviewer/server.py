@@ -1,12 +1,10 @@
-import logging
 import json
-import nest_asyncio
+import logging
+import asyncio
 import tornado.web as web
 import tornado.websocket as ws
 import tornado.escape
 import tornado.ioloop
-
-logging.getLogger().setLevel(logging.DEBUG)
 
 
 class Application(web.Application):
@@ -22,6 +20,7 @@ class SocketHandler(ws.WebSocketHandler):
     """
     py_client = None
     js_client = None
+    view_args = None
 
     @classmethod
     def send_data(cls, data):
@@ -36,16 +35,20 @@ class SocketHandler(ws.WebSocketHandler):
         self._path = path
 
     def on_message(self, message):
-        try:
-            json_msg = tornado.escape.json_decode(message)
+        json_msg = tornado.escape.json_decode(message)
+        msg_key = next(iter(json_msg))
+        if msg_key == "py_client":
+            SocketHandler.py_client = self
+            logging.info("Python client connected.")
+            SocketHandler.view_args = json_msg[msg_key]
+        elif msg_key == "js_client":
+            SocketHandler.js_client = self
+            logging.info("JavaScript client connected.")
+            if SocketHandler.view_args is not None:
+                SocketHandler.send_data(json.dumps(SocketHandler.view_args))
+                SocketHandler.view_args = None
+        else:
             SocketHandler.send_data(json_msg)
-        except json.JSONDecodeError:
-            if message == "py_client":
-                SocketHandler.py_client = self
-                logging.info("Python client connected.")
-            elif message == "js_client":
-                SocketHandler.js_client = self
-                logging.info("JavaScript client connected.")
 
     def on_close(self):
         if self == SocketHandler.py_client:

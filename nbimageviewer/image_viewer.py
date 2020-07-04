@@ -1,5 +1,6 @@
-from abc import ABC, abstractmethod
+import logging
 from uuid import uuid4
+from abc import ABC, abstractmethod
 
 import numpy as np
 import PIL
@@ -7,6 +8,8 @@ import IPython.display as display
 
 from .server import Application
 from .client import Client
+
+logging.getLogger().setLevel(logging.DEBUG)
 
 
 class ImageViewer(ABC):
@@ -18,7 +21,7 @@ class ImageViewer(ABC):
         components that are shared amongst all the different layouts.
     """
 
-    def __init__(self, images, labels=None, port=8889):
+    def __init__(self, images, labels=None, port=8889, **kwargs):
         self.id = uuid4().hex
         self.addr = "ws://localhost:" + str(port) + "/" + self.id
         # start application
@@ -33,12 +36,11 @@ class ImageViewer(ABC):
             display.Javascript("window.id = \"{}\"".format(self.id))
         )
         # create client
-        self.client = Client(self.addr, images, labels)
+        self.client = Client(self.addr, images, labels, **kwargs)
 
-    @abstractmethod
-    async def display(self):
-        """ Abstract method that displays the provided images.
-        """
+    # async def display(self):
+    #     """ Abstract method that displays the provided images.
+    #     """
 
     @abstractmethod
     def import_assets(self):
