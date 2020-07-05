@@ -47,7 +47,7 @@ class Carousel extends Component {
         slidesPerPage={this.state.slidesPerPage}
         slidesPerScroll={this.state.slidesPerScroll}
         arrows
-      ></_Carousel>
+      />
     );
   }
 }

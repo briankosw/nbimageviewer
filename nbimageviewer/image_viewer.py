@@ -23,6 +23,8 @@ class ImageViewer(ABC):
         components that are shared amongst all the different layouts.
     """
 
+    app = None
+
     def __init__(self, images, labels=None, port=8889, **kwargs):
         """
         Args:
@@ -31,20 +33,18 @@ class ImageViewer(ABC):
             port: port number for connection
         """
         self.id = uuid4().hex
-        self.addr = "ws://localhost:" + str(port) + "/" + self.id
+        #self.addr = "ws://localhost:" + str(port) + "/" + self.id
+        self.addr = "ws://localhost:" + str(port)
         # start application
-        self.app = Application(port=port, path=self.id)
-        self.app.listen(port)
+        if ImageViewer.app is None:
+            ImageViewer.app = Application(port=port)
+            ImageViewer.app.listen(port)
         # add addr to window
         display.display(display.Javascript('window.addr = "{}"'.format(self.addr)))
         # add id to window
         display.display(display.Javascript('window.id = "{}"'.format(self.id)))
         # create client
         self.client = Client(self.addr, images, labels, **kwargs)
-
-    # async def display(self):
-    #     """ Abstract method that displays the provided images.
-    #     """
 
     @abstractmethod
     def import_assets(self):

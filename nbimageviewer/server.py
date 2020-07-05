@@ -6,10 +6,10 @@ import tornado.ioloop
 
 
 class Application(web.Application):
-    def __init__(self, port=None, path=None):
-        if port is None or path is None:
-            raise ValueError("port and id value cannot be None.")
-        handlers = [(r"/" + path, SocketHandler, {"port": port, "path": path})]
+    def __init__(self, port=None):
+        if port is None:
+            raise ValueError("port value cannot be None.")
+        handlers = [(r"/", SocketHandler, {"port": port})]
         super(Application, self).__init__(handlers)
 
 
@@ -41,9 +41,8 @@ class SocketHandler(ws.WebSocketHandler):
         except Exception as e:
             logging.error("Error signaling py_client", exc_info=True)
 
-    def initialize(self, port, path):
+    def initialize(self, port):
         self._port = port
-        self._path = path
 
     def on_message(self, message):
         json_msg = tornado.escape.json_decode(message)
