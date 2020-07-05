@@ -4,22 +4,15 @@ import asyncio
 
 import IPython.display as display
 
-from . import image_viewer
-
-CAROUSEL_DIR = os.path.dirname(os.path.realpath(__file__)) + "/assets/dist/"
+from .image_viewer import ImageViewer, DIST_DIR
 
 
-class Carousel(image_viewer.ImageViewer):
-    """Carousel displays a carousel of the provided images.
+class Carousel(ImageViewer):
+    """ Carousel displays a carousel of the provided images.
     """
 
     def __init__(
-        self,
-        images,
-        labels=None,
-        port=8889,
-        num_slides=1,
-        num_scrolls=1
+        self, images, labels=None, port=8889, num_slides=1, num_scrolls=1
     ):
         """
         Args:
@@ -42,11 +35,9 @@ class Carousel(image_viewer.ImageViewer):
 
     def import_assets(self):
         assets_str = ""
-        with open(os.path.join(CAROUSEL_DIR, "index.html"), "r") as f:
-            assets_str = "".join(
-                [assets_str, f.read().format(self.id)]
-            )
-        with open(os.path.join(CAROUSEL_DIR, "carousel.js"), "r") as f:
+        with open(os.path.join(DIST_DIR, "index.html"), "r") as f:
+            assets_str = "".join([assets_str, f.read().format(self.id)])
+        with open(os.path.join(DIST_DIR, "carousel.js"), "r") as f:
             assets_str = "".join(
                 [assets_str, "<script>{}</script>".format(f.read())]
             )
@@ -59,9 +50,9 @@ class Carousel(image_viewer.ImageViewer):
     @num_slides.setter
     def num_slides(self, num_slides):
         self._num_slides = num_slides
-        asyncio.create_task(self.client.write_message(
-            {"attrs": {"slidesPerPage": num_slides}}
-        ))
+        asyncio.create_task(
+            self.client.write_message({"attrs": {"slidesPerPage": num_slides}})
+        )
 
     @property
     def num_scrolls(self):
@@ -70,6 +61,8 @@ class Carousel(image_viewer.ImageViewer):
     @num_slides.setter
     def num_scrolls(self, num_scrolls):
         self._num_scrolls = num_scrolls
-        asyncio.create_task(self.client.write_message(
-            {"attrs": {"slidesPerScroll": num_scrolls}}
-        ))
+        asyncio.create_task(
+            self.client.write_message(
+                {"attrs": {"slidesPerScroll": num_scrolls}}
+            )
+        )

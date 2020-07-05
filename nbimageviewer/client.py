@@ -8,7 +8,17 @@ import tornado.websocket as ws
 
 
 class Client:
+    """ Client class handles all the connection and data transfer that happens
+        through the websocket.
+    """
+
     def __init__(self, addr, images, labels, **view_args):
+        """
+        Args:
+            addr: address of the websocket
+            images: a list of images
+            labels: a list of labels for each image
+        """
         self._addr = addr
         self._images = images
         self._labels = labels
@@ -23,7 +33,7 @@ class Client:
         """
         while True:
             try:
-                task = await self.queue.get_nowait()
+                await self.queue.get_nowait()
             except asyncio.QueueEmpty:
                 await asyncio.sleep(0.0001)
 
@@ -34,6 +44,7 @@ class Client:
         self.ws = await ws.websocket_connect(self._addr)
         message = {"py_client": None}
         await self.write_message(message)
+        # Wait to send data until signal received from server
         while True:
             message = await self.ws.read_message()
             if message:
@@ -48,9 +59,7 @@ class Client:
         while self.ws is None:
             await asyncio.sleep(0.001)
         message_json = json.dumps(message)
-        await self.queue.put(
-            asyncio.ensure_future(self.ws.write_message(message_json))
-        )
+        await self.queue.put(asyncio.ensure_future(self.ws.write_message(message_json)))
 
     async def send_data(self):
         """ Send image data to front end.

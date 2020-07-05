@@ -1,3 +1,4 @@
+import os
 import logging
 from uuid import uuid4
 from abc import ABC, abstractmethod
@@ -10,6 +11,7 @@ from .server import Application
 from .client import Client
 
 logging.getLogger().setLevel(logging.DEBUG)
+DIST_DIR = os.path.dirname(os.path.realpath(__file__)) + "/assets/dist/"
 
 
 class ImageViewer(ABC):
@@ -22,19 +24,21 @@ class ImageViewer(ABC):
     """
 
     def __init__(self, images, labels=None, port=8889, **kwargs):
+        """
+        Args:
+            images: a list of images
+            labels: a list of labels for each image
+            port: port number for connection
+        """
         self.id = uuid4().hex
         self.addr = "ws://localhost:" + str(port) + "/" + self.id
         # start application
         self.app = Application(port=port, path=self.id)
         self.app.listen(port)
         # add addr to window
-        display.display(
-            display.Javascript("window.addr = \"{}\"".format(self.addr))
-        )
+        display.display(display.Javascript('window.addr = "{}"'.format(self.addr)))
         # add id to window
-        display.display(
-            display.Javascript("window.id = \"{}\"".format(self.id))
-        )
+        display.display(display.Javascript('window.id = "{}"'.format(self.id)))
         # create client
         self.client = Client(self.addr, images, labels, **kwargs)
 
@@ -67,4 +71,3 @@ class ImageViewer(ABC):
                     len(images), len(labels)
                 )
             )
-        self._labels = labels  # FIX: random code to remove pylint warning

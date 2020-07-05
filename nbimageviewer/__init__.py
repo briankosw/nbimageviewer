@@ -1,1 +1,2 @@
-from . import carousel
+from .carousel import Carousel
+from .gallery import Gallery

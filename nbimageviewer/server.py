@@ -1,6 +1,4 @@
-import json
 import logging
-import asyncio
 import tornado.web as web
 import tornado.websocket as ws
 import tornado.escape
@@ -18,6 +16,7 @@ class Application(web.Application):
 class SocketHandler(ws.WebSocketHandler):
     """Handler for socket connections.
     """
+
     py_client = None
     js_client = None
 

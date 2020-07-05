@@ -37,6 +37,7 @@
   "dependencies": {
     "@brainhubeu/react-carousel": "^1.19.0",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-photo-gallery": "^8.0.0"
   }
 }
