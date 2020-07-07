@@ -33,7 +33,6 @@ class ImageViewer(ABC):
             port: port number for connection
         """
         self.id = uuid4().hex
-        #self.addr = "ws://localhost:" + str(port) + "/" + self.id
         self.addr = "ws://localhost:" + str(port)
         # start application
         if ImageViewer.app is None:

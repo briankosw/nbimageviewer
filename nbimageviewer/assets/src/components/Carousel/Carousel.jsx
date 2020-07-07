@@ -1,55 +1,63 @@
-import React, { Component } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import _Carousel from '@brainhubeu/react-carousel';
 import '@brainhubeu/react-carousel/lib/style.css';
 import './Carousel.css';
 
-class Carousel extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: 0,
-      slides: [],
-      slidesPerPage: 1,
-      slidesPerScroll: 1,
+function Carousel(props) {
+  const [value, setValue] = useState(0);
+  const [slides, setSlides] = useState([]);
+  const [slidesPerPage, setSlidesPerPage] = useState(1);
+  const [slidesPerScroll, setSlidesPerScroll] = useState(1);
+  const socket = useRef(new WebSocket(window.addr));
+
+  useEffect(() => {
+    socket.current.onopen = () =>
+      socket.current.send(JSON.stringify({ js_client: null }));
+    socket.current.onclose = () => console.log('WebSocket closed.');
+
+    return () => {
+      socket.current.close();
     };
-    this.onChange = this.onChange.bind(this);
-    this.socket = new WebSocket(window.addr);
-    this.socket.addEventListener('open', () => {
-      this.socket.send(JSON.stringify({ js_client: null }));
-    });
-    this.socket.addEventListener('message', (payload) => {
+  }, []);
+
+  useEffect(() => {
+    if (!socket.current) return;
+
+    socket.current.onmessage = (payload) => {
       const message = JSON.parse(payload.data);
       const msg_key = Object.keys(message)[0];
       if (msg_key === 'attrs') {
-        this.setState(message[msg_key]);
+        for (const [attr, val] of Object.entries(message[msg_key])) {
+          switch (attr) {
+            case 'slidesPerPage':
+              setSlidesPerPage(val);
+              break;
+            case 'slidesPerScroll':
+              setSlidesPerScroll(val);
+              break;
+          }
+        }
       } else if (msg_key === 'data') {
         const images = Object.values(message[msg_key]).map((image) => {
           const image_str = 'data:image/jpeg;base64,' + image;
           return <img src={image_str} />;
         });
-        this.setState({ slides: images });
+        setSlides(images);
       }
-    });
-  }
+    };
+  }, [slides, slidesPerPage, slidesPerScroll]);
 
-  onChange(value) {
-    this.setState({ value });
-    // I think communicate the state back to Python for lazy-loading.
-  }
-
-  render() {
-    return (
-      <_Carousel
-        value={this.state.value}
-        slides={this.state.slides}
-        onChange={this.onChange}
-        slidesPerPage={this.state.slidesPerPage}
-        slidesPerScroll={this.state.slidesPerScroll}
-        arrows
-      />
-    );
-  }
+  return (
+    <_Carousel
+      value={value}
+      slides={slides}
+      onChange={setValue}
+      slidesPerPage={slidesPerPage}
+      slidesPerScroll={slidesPerScroll}
+      arrows
+    />
+  );
 }
 
 ReactDOM.render(<Carousel />, document.getElementById(window.id));

@@ -4,7 +4,6 @@
   "description": "nbimageviewer is a Python library for rapid image visualization in Jupyter Notebooks. It uses IPython, HTML and JavaScript, and WebSockets to efficiently visualize large amounts of images.",
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server --mode development",
     "build": "webpack --mode production",
     "dev": "webpack --mode development",
     "format": "prettier --write \"nbimageviewer/assets/**/*.jsx\"",

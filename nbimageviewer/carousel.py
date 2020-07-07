@@ -11,9 +11,7 @@ class Carousel(ImageViewer):
     """ Carousel displays a carousel of the provided images.
     """
 
-    def __init__(
-        self, images, labels=None, port=8889, num_slides=1, num_scrolls=1
-    ):
+    def __init__(self, images, labels=None, port=8889, num_slides=1, num_scrolls=1):
         """
         Args:
             images: a list of images
@@ -23,11 +21,7 @@ class Carousel(ImageViewer):
             num_scrolls: number by which value will change on scroll
         """
         super(Carousel, self).__init__(
-            images,
-            labels,
-            port,
-            slidesPerPage=num_slides,
-            slidesPerScroll=num_scrolls
+            images, labels, port, slidesPerPage=num_slides, slidesPerScroll=num_scrolls
         )
         self.import_assets()
         self._num_slides = num_slides
@@ -38,9 +32,7 @@ class Carousel(ImageViewer):
         with open(os.path.join(DIST_DIR, "index.html"), "r") as f:
             assets_str = "".join([assets_str, f.read().format(self.id)])
         with open(os.path.join(DIST_DIR, "carousel.js"), "r") as f:
-            assets_str = "".join(
-                [assets_str, "<script>{}</script>".format(f.read())]
-            )
+            assets_str = "".join([assets_str, "<script>{}</script>".format(f.read())])
         display.display(display.HTML(assets_str))
 
     @property
@@ -62,7 +54,5 @@ class Carousel(ImageViewer):
     def num_scrolls(self, num_scrolls):
         self._num_scrolls = num_scrolls
         asyncio.create_task(
-            self.client.write_message(
-                {"attrs": {"slidesPerScroll": num_scrolls}}
-            )
+            self.client.write_message({"attrs": {"slidesPerScroll": num_scrolls}})
         )
