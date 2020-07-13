@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import _Gallery from 'react-photo-gallery';
 import './Gallery.css';
 
-function Gallery(props) {
+function Gallery() {
   const [photos, setPhotos] = useState([]);
   const socket = useRef(new WebSocket(window.addr));
 

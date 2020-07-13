@@ -1,15 +1,19 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import ReactDOM from 'react-dom';
-import _Carousel from '@brainhubeu/react-carousel';
+import _Carousel, { Dots } from '@brainhubeu/react-carousel';
 import '@brainhubeu/react-carousel/lib/style.css';
 import './Carousel.css';
 
-function Carousel(props) {
+function Carousel() {
   const [value, setValue] = useState(0);
   const [slides, setSlides] = useState([]);
   const [slidesPerPage, setSlidesPerPage] = useState(1);
   const [slidesPerScroll, setSlidesPerScroll] = useState(1);
   const socket = useRef(new WebSocket(window.addr));
+
+  const onChange = useCallback((value) => {
+    setValue(value);
+  });
 
   useEffect(() => {
     socket.current.onopen = () =>
@@ -49,14 +53,17 @@ function Carousel(props) {
   }, [slides, slidesPerPage, slidesPerScroll]);
 
   return (
-    <_Carousel
-      value={value}
-      slides={slides}
-      onChange={setValue}
-      slidesPerPage={slidesPerPage}
-      slidesPerScroll={slidesPerScroll}
-      arrows
-    />
+    <React.Fragment>
+      <_Carousel
+        value={value}
+        slides={slides}
+        onChange={onChange}
+        slidesPerPage={slidesPerPage}
+        slidesPerScroll={slidesPerScroll}
+        arrows
+      />
+      <Dots number={20} thumbnails={slides} value={value} onChange={onChange} />
+    </React.Fragment>
   );
 }
 

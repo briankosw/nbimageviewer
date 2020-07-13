@@ -35,7 +35,7 @@ class Client:
             try:
                 await self.queue.get_nowait()
             except asyncio.QueueEmpty:
-                await asyncio.sleep(0.0001)
+                await asyncio.sleep(0)
 
     async def websocket_connect(self, view_args):
         """ Connects to the websocket at given address. Sends attributes and
@@ -55,7 +55,7 @@ class Client:
                 await self.write_message({"attrs": view_args})
                 await self.send_data()
                 break
-            await asyncio.sleep(0.0001)
+            await asyncio.sleep(0)
 
     async def write_message(self, message):
         """ Writes message to the websocket.
