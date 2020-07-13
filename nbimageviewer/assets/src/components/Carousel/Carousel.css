@@ -1,0 +1,17 @@
+.carousel {
+    max-width: 100%;
+    resize: vertical;
+    overflow: auto;
+    height: 400px;
+    border: 1px solid;
+    display: flex;
+    flex-direction: column;
+}
+
+.BrainhubCarousel__container {
+    margin: auto 0;
+}
+
+.BrainhubCarousel__dots {
+    margin-bottom: 0;
+}

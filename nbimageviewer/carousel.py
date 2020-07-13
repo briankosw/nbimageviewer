@@ -30,7 +30,7 @@ class Carousel(ImageViewer):
     def import_assets(self):
         assets_str = ""
         with open(os.path.join(DIST_DIR, "index.html"), "r") as f:
-            assets_str = "".join([assets_str, f.read().format(self.id)])
+            assets_str = "".join([assets_str, f.read().format(self.id, "carousel")])
         with open(os.path.join(DIST_DIR, "carousel.js"), "r") as f:
             assets_str = "".join([assets_str, "<script>{}</script>".format(f.read())])
         display.display(display.HTML(assets_str))
