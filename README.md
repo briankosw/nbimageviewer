@@ -1,6 +1,24 @@
 # nbimageviewer
 
-nbimageviewer is a Python library for rapid image visualization in Jupyter Notebooks. It uses IPython, HTML and JavaScript, and WebSockets to efficiently visualize large amounts of images.
+nbimageviewer is a Python library for aesthetic and efficient image visualization in Jupyter Notebooks. It uses [IPython](https://ipython.readthedocs.io/en/stable/api/), ReactJS, and WebSockets to efficiently visualize large amounts of images.
+
+![Carousel](carousel.png)
+
+## Installation
+
+To install `nbimageviewer` from PyPI:
+```
+pip install nbimageviewer
+```
+
+To  install `nbimageviewer` from source:
+```
+git clone git@github.com:briankosw/nbimageviewer.git
+cd nbimageviewer
+pip install .
+```
+
+## Usage
 
 Visualizing large amounts of images in a Jupyter Notebook is usually done by creating matplotlib plots, which can be a painful and inefficient process with lots of configuring and searching online.
 
@@ -15,7 +33,7 @@ for i, image in enumerate(len(images)):
   ...
 ```
 
-nbimageviewer simplifies this process while providing convenient and beautiful visualizations.
+`nbimageviewer` simplifies this process while providing convenient and beautiful visualizations.
 
 ```
 import nbimageviewer.carousel as carousel
