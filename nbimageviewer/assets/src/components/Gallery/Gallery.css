@@ -1,0 +1,6 @@
+.gallery {
+    max-width: 100%;
+    resize: vertical;
+    overflow: auto;
+    height: 400px;
+}

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import ReactDOM from 'react-dom';
-import _Carousel, { Dots } from '@brainhubeu/react-carousel';
+import _Carousel from '@brainhubeu/react-carousel';
 import '@brainhubeu/react-carousel/lib/style.css';
 import './Carousel.css';
 
@@ -53,17 +53,14 @@ function Carousel() {
   }, [slides, slidesPerPage, slidesPerScroll]);
 
   return (
-    <React.Fragment>
-      <_Carousel
-        value={value}
-        slides={slides}
-        onChange={onChange}
-        slidesPerPage={slidesPerPage}
-        slidesPerScroll={slidesPerScroll}
-        arrows
-      />
-      <Dots number={20} thumbnails={slides} value={value} onChange={onChange} />
-    </React.Fragment>
+    <_Carousel
+      value={value}
+      slides={slides}
+      onChange={onChange}
+      slidesPerPage={slidesPerPage}
+      slidesPerScroll={slidesPerScroll}
+      arrows
+    />
   );
 }
 
