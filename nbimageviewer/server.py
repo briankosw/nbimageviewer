@@ -63,8 +63,10 @@ class SocketHandler(ws.WebSocketHandler):
 
     def on_close(self):
         if self == SocketHandler.py_client:
+            logging.info("Python client closed.")
             SocketHandler.py_client = None
         else:
+            logging.info("JavaScript client closed.")
             SocketHandler.js_client = None
 
     def check_origin(self, origin):

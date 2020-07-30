@@ -32,10 +32,8 @@ class Client:
         """ Handles asynchronous tasks that are enqueued to the work queue.
         """
         while True:
-            try:
-                await self.queue.get_nowait()
-            except asyncio.QueueEmpty:
-                await asyncio.sleep(0)
+            message = await self.queue.get()
+            await self.ws.write_message(message)
 
     async def websocket_connect(self, view_args):
         """ Connects to the websocket at given address. Sends attributes and
@@ -49,13 +47,9 @@ class Client:
         message = {"py_client": None}
         await self.write_message(message)
         # Wait to send data until signal received from server
-        while True:
-            message = await self.ws.read_message()
-            if message:
-                await self.write_message({"attrs": view_args})
-                await self.send_data()
-                break
-            await asyncio.sleep(0)
+        message = await self.ws.read_message()
+        await self.write_message({"attrs": view_args})
+        await self.send_data()
 
     async def write_message(self, message):
         """ Writes message to the websocket.
@@ -64,10 +58,8 @@ class Client:
                 message: a dictionary that contains the message to be sent to
                          the Javascript side
         """
-        while self.ws is None:
-            await asyncio.sleep(0.001)
         message_json = json.dumps(message)
-        await self.queue.put(asyncio.ensure_future(self.ws.write_message(message_json)))
+        self.queue.put_nowait(message_json)
 
     async def send_data(self):
         """ Send image data to front end.
